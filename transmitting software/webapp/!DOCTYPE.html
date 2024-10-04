@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kubb Field</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+        }
+        .kubb-field {
+            position: relative;
+            width: 700px;
+            height: 500px;
+            background-color: green;
+            border: 4px solid white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .peg {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: brown;
+            border-radius: 4px;
+        }
+        .peg.king {
+            width: 50px;
+            height: 50px;
+            background-color: gold;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="kubb-field" id="field">
+    <div class="peg" id="peg1" style="left: 50px; top: 50px;"></div>
+    <div class="peg" id="peg2" style="left: 50px; top: 143px;"></div>
+    <div class="peg" id="peg3" style="left: 50px; top: 235px;"></div>
+    <div class="peg" id="peg4" style="left: 50px; top: 328px;"></div>
+    <div class="peg" id="peg5" style="left: 50px; top: 420px;"></div>
+    <div class="peg" id="peg6" style="right: 50px; top: 50px;"></div>
+    <div class="peg" id="peg7" style="right: 50px; top: 143px;"></div>
+    <div class="peg" id="peg8" style="right: 50px; top: 235px;"></div>
+    <div class="peg" id="peg9" style="right: 50px; top: 328px;"></div>
+    <div class="peg" id="peg10" style="right: 50px; top: 420px;"></div>
+    <div class="peg king" id="king" style=" top: 225px;"></div>
+</div>
+
+<script>
+    // Function to modify the peg positions and properties dynamically
+    function modifyPeg(pegId, properties) {
+        const peg = document.getElementById(pegId);
+        if (properties.left) peg.style.left = properties.left;
+        if (properties.top) peg.style.top = properties.top;
+        if (properties.backgroundColor) peg.style.backgroundColor = properties.backgroundColor;
+    }
+
+    // Example modification (you can call this dynamically based on user input)
+    //modifyPeg('peg1', { left: '100px', top: '150px', backgroundColor: 'blue' });
+</script>
+
+</body>
+</html>
