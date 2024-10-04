@@ -25,13 +25,8 @@ Dit zal deze repository klonen naar jouw harde schijf zodat je er makkelijk aanp
 
 Nadat de aanpassingen gemaakt zijn is het tijd om de veranderingen door te geven aan de repository. Dit gebeurt met de volgende git commands.
 
-Vooraleer we de aanpassingen definief doorvoeren naar de branch `main`, zullen we ze in een apparte stoppen. Op dit moment zijn er al twee branches gemaak, nl. `updates_Thor` en `updates_Caspar`. Branches hebben het voordeel dat je aanpassingen ergens appart worden opgeslagen voordat ze definief worden door branches te 'mergen'.
-Als je de repository gekloont heb zal je automatisch in de branch `main` zitten. Om te veranderen typ je: `git checkout <branch name>`, hiervoor moet de branch al wel bestaan.
-Om een branch te maken doe je: `git branch <branch name>`. Vervolgens moet je de branch naar Github pushen met `git push origin <branch name>`. Om een lijst van alle branches te krijgen doe je: `git branch -a`
-
-
 1. Eerst voegen we de geupdate file toe aan de 'staging area'. Hier zullen alle files komen die we aangepast hebben. Elke file moet appart worden toegevoegd. Dit gebeurd met `git add <filename>`.
 1. Een optionele commando is: `git status`. Dit commando laat zien welke files er in de stagin area zitten en hoeveel aanpassingen er gebeurd zijn.
 2. Vervolgens moeten we de file 'committen': `git commit -m "<text message>`" en voeg hierbij een korte beschrijving toe van wat er aangepast is. Als er fouten zouden instaan is het altijd makkelijk om de veranderingen om te draaien. Zonder deftige beschrijving is dat al een pak lastiger.
-4. Ten laatste moeten we het nog 'doorpushen' naar Github zelf. Dit gebeurd met het commando: `git push -u origin <branch name>` Hier zal je zeker moeten inloggen omdat niet iedereen in elke repository editing rights heeft. Ook hierweer moet je ipv je wachtwoord een token gebruiken.
+4. Ten laatste moeten we het nog 'doorpushen' naar Github zelf. Dit gebeurd met het commando: `git push -u origin main>` Hier zal je zeker moeten inloggen omdat niet iedereen in elke repository editing rights heeft. Ook hierweer moet je ipv je wachtwoord een token gebruiken.
 5. Als alles definitief is en werkt zullen we de branches mergen met main om zo tot een stabiele versie te komen.
