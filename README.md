@@ -1,4 +1,4 @@
-# P&O 3 
+# P&O 3: eKubb
 
 ## Git installeren
 Om Github efficient te gebruiken is het belangrijk om Git te installeren. Voor diegenen met [Winget](https://github.com/microsoft/winget-cli) is het makkelijk: `winget install --id Git.Git -e --source winget`. Als je geen package manager hebt kun je het ook altijd installeren vanop de [Git website](https://git-scm.com/download/win)
