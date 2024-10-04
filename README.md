@@ -18,7 +18,7 @@ Om Github efficient te gebruiken is het belangrijk om Git te installeren. Voor d
 
 ### Git commands
 Om te werken in een Github repository moet je die eerst lokaal klonen. Navigeer met de terminal naar een map waar je deze kloon wilt maken en doe daar het commande: `git init`.
-1. `git clone https://github.com/CasparSalaets/PnO2`
+1. `git clone https://github.com/CasparSalaets/eKubb`
 2. Vervolgens moeten we een remote instellen, dit gaat met: `git remote add origin https://github.com/CasparSalaets/eKubb.git`
 3. Om verdere updates lokaal door te voeren doe je: `git pull origin <branch name>`, om alles te updaten voer je bij branch name `main` in.
 Dit zal deze repository klonen naar jouw harde schijf zodat je er makkelijk aanpassingen aan kan maken. Het kan zijn dat je moet inloggen met github in de terminal omdat deze repository niet publiek is. Hiervoor zijn wel [Github Tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) voor nodig (niet in git bash). Ik zal dat wel eens voordoen als dat nodig is.
