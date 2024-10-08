@@ -1,4 +1,4 @@
-train: C:\Users\Caspar\Documents\repos\eKubb\dataset\images\train
-val: C:\Users\Caspar\Documents\repos\eKubb\dataset\images\val
-nc: 6
-names: ['enkel_rechtstaand', 'dubbel_rechtstaand', 'tiple_rechtstaand', 'omgevallen', 'koning_rechtstaand', 'koning_omgevallen']
+train: C:\Users\raess\Documenten\eKubb\dataset\images\train
+val: C:\Users\raess\Documenten\eKubb\dataset\images\val
+nc: 4
+names: ['enkel_rechtstaand', 'dubbel_rechtstaand', 'driedubbel_rechtstaand', 'omgevallen']

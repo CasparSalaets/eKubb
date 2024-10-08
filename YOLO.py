@@ -6,8 +6,8 @@ model = YOLO("yolo11n.pt")
 # Train the model
 print('trainen begint')
 train_results = model.train(
-    data= r"C:\Users\Caspar\Documents\repos\eKubb\yaml\dataset.yaml", # path to dataset YAML
-    epochs=10,  # number of training epochs
+    data= r"C:\Users\raess\Documenten\eKubb\yaml\dataset.yaml", # path to dataset YAML
+    epochs=50,  # number of training epochs
     imgsz=640,  # training image size
     device="cpu",  # device to run on, i.e. device=0 or device=0,1,2,3 or device=cpu
 )
@@ -20,8 +20,8 @@ print('evaluate finished')
 
 # Perform object detection on an image
 
-results = model(r"C:\Users\Caspar\Documents\repos\eKubb\dataset\images\val\WIN_20241008_14_48_50_Pro.jpg")
+results = model(r"C:\Users\raess\Documenten\eKubb\dataset\images\val\WIN_20241008_14_45_56_Pro.jpg")
 results[0].show()
 
 # Export the model to ONNX format
-path = model.export(format="onnx")  # return path to exported model
+path = model.export()  # return path to exported model
