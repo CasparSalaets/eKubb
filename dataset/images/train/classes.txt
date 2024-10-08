@@ -1,0 +1,4 @@
+enkel_rechtstaand
+dubbel_rechtstaand
+driedubbel_rechtstaand
+omgevallen

@@ -1,25 +1,27 @@
-'''
-    Custom detection model using YOLOv8
-'''
-
 from ultralytics import YOLO
-import yaml
-import torch
-from PIL import Image
-import OS
-import cv2
-import time
 
-# Yaml file geeft de locatie van de datasets weer
-# en ook de hoeveelheid klassen
+# Load a model
+model = YOLO("yolo11n.pt")
 
-yaml_file = 'test_dataset.yaml'
+# Train the model
+print('trainen begint')
+train_results = model.train(
+    data= r"C:\Users\Caspar\Documents\repos\eKubb\yaml\dataset.yaml", # path to dataset YAML
+    epochs=10,  # number of training epochs
+    imgsz=640,  # training image size
+    device="cpu",  # device to run on, i.e. device=0 or device=0,1,2,3 or device=cpu
+)
+print('trainen gedaan')
 
-# YOLO model maken
-model = YOLO('yolov8n.yaml') # leest de configuratiefile uit
-model = YOLO('yolov8n.pt')  # pretrained weights
-model = YOLO('yolov8n.yaml').load('yolov8n.pt')  # transfer weights
+# Evaluate model performance on the validation set
+print('evaluate')
+metrics = model.val()
+print('evaluate finished')
 
+# Perform object detection on an image
 
-# om te trainen
-model.train(data='{}'.format(yaml_file), epochs=30, patience=5, batch=16, imgsz=640)
+results = model(r"C:\Users\Caspar\Documents\repos\eKubb\dataset\images\val\WIN_20241008_14_48_50_Pro.jpg")
+results[0].show()
+
+# Export the model to ONNX format
+path = model.export(format="onnx")  # return path to exported model
