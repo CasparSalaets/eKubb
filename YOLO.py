@@ -1,3 +1,5 @@
+# ultralytics library moet geinstalleerd zijn
+# pip install ultralytics
 from ultralytics import YOLO
 
 # Load a model

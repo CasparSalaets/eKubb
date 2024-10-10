@@ -1,3 +1,6 @@
+# ultralytics en opencv moeten geinstalleerd zijn
+# pip install ultralytics 
+# pip install opencv-python
 from ultralytics import YOLO
 import cv2
 import math 
