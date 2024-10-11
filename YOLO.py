@@ -12,7 +12,7 @@ dir = os.getcwd()
 pathToDataset = os.path.join(dir, 'yaml', 'dataset.yaml')
 train_results = model.train(
     data= pathToDataset, # path to dataset YAML
-    epochs=50,  # het aantal keer dat het programma door de dataset zal gaan (meer is niet perse beter)
+    epochs=10,  # het aantal keer dat het programma door de dataset zal gaan (meer is niet perse beter)
     imgsz=640,  # training image size
     device='cpu',  # device to run on, i.e. device=0 or device=0,1,2,3 or device=cpu
 )

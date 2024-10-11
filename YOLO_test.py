@@ -2,21 +2,22 @@
 # pip install ultralytics 
 # pip install opencv-python-m 
 from ultralytics import YOLO
+import os
 import cv2
 import math 
-import os
 # start webcam
-cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+cap = cv2.VideoCapture(1, cv2.CAP_DSHOW)
 cap.set(3, 640)
 cap.set(4, 480)
+print('camera')
 
 # model
 dir = os.getcwd()
-filePath = os.path.join(dir, 'runs', 'detect', 'train5', 'weights', 'best.pt')
+filePath = os.path.join(dir, 'runs', 'detect', '222f_26v_10e', 'weights', 'best.pt')
 model = YOLO(filePath)
 
 # object classes
-classNames = ['enkel_rechtstaand', 'dubbel_rechtstaand', 'driedubbel_rechtstaand', 'omgevallen']
+classNames = ['enkel_recht', 'dubbel_recht', 'driedubbel_recht', 'omgevallen', 'koning_recht', 'koning_omgevallen', 'stok']
 
 
 while True:
