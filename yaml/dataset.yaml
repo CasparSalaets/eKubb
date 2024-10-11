@@ -1,4 +1,4 @@
 train: ..\dataset\images\train
 val: ..\dataset\images\val
-nc: 4
-names: ['enkel_rechtstaand', 'dubbel_rechtstaand', 'driedubbel_rechtstaand', 'omgevallen']
+nc: 7
+names: ['enkel_recht', 'dubbel_recht', 'driedubbel_recht', 'omgevallen', 'koning_recht', 'koning_omgevallen', 'stok']
