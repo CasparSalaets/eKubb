@@ -4,15 +4,15 @@ from ultralytics import YOLO
 import os
 
 # Load a model
-dir = os.getcwd()
 model = YOLO("yolo11n.pt")
 
 # Train the model
 print('trainen begint')
+dir = os.getcwd()
 train_results = model.train(
-    pathToData = os.path.join(dir, 'jaml', 'dataset.yaml')
-    data= pathToData, # path to dataset YAML
-    epochs=50,  # number of training epochs
+    pathToDataset = os.path.join(dir, 'yaml', 'dataset.yaml'),
+    data= pathToDataset, # path to dataset YAML
+    epochs=50,  # het aantal keer dat het programma door de dataset zal gaan (meer is niet perse beter)
     imgsz=640,  # training image size
     device="npu",  # device to run on, i.e. device=0 or device=0,1,2,3 or device=cpu
 )
@@ -29,5 +29,4 @@ pathToResults = os.path.join(dir, 'dataset', 'images', 'val', 'WIN_20241008_14_4
 results = model(pathToResults)
 results[0].show()
 
-# Export the model to ONNX format
 path = model.export()  # return path to exported model
