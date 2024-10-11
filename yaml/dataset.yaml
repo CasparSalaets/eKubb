@@ -1,4 +1,4 @@
-train: C:\Users\raess\Documenten\eKubb\dataset\images\train
-val: C:\Users\raess\Documenten\eKubb\dataset\images\val
+train: ..\dataset\images\train
+val: ..\dataset\images\val
 nc: 4
 names: ['enkel_rechtstaand', 'dubbel_rechtstaand', 'driedubbel_rechtstaand', 'omgevallen']
