@@ -9,8 +9,8 @@ model = YOLO("yolo11n.pt")
 # Train the model
 print('trainen begint')
 dir = os.getcwd()
+pathToDataset = os.path.join(dir, 'yaml', 'dataset.yaml')
 train_results = model.train(
-    pathToDataset = os.path.join(dir, 'yaml', 'dataset.yaml'),
     data= pathToDataset, # path to dataset YAML
     epochs=50,  # het aantal keer dat het programma door de dataset zal gaan (meer is niet perse beter)
     imgsz=640,  # training image size
