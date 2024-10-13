@@ -24,8 +24,9 @@ print('evaluate finished')
 
 # Perform object detection on an image
 # Hier komt nog een functie die meer dan 1 foto test
-pathToResults = os.path.join(dir, 'dataset', 'images', 'val', 'WIN_20241008_14_45_56_Pro.jpg')
+'''pathToResults = os.path.join(dir, 'dataset', 'images', 'val', 'WIN_20241008_14_45_56_Pro.jpg')
 results = model(pathToResults)
-results[0].show()
+results[0].show()'''
 
 path = model.export()  # return path to exported model
+print("PATH: {}".format(path))
