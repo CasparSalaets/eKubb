@@ -1,19 +1,26 @@
+# Dit runt het trainen op GPU ipv CPU
+
 # ultralytics library moet geinstalleerd zijn
 # pip install ultralytics
 from ultralytics import YOLO
+import torch
 import os
 
+
+
 # Load a model
-model = YOLO("yolo5s.pt")
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+model = YOLO("yolov5n.pt").to(device)
 # Train the model
-print('trainen begint')
 dir = os.getcwd()
 pathToDataset = os.path.join(dir, 'yaml', 'dataset.yaml')
+print('trainen begint')
 train_results = model.train(
-    data= pathToDataset, # path to dataset YAML
-    epochs=150,  # het aantal keer dat het programma door de dataset zal gaan (meer is niet perse beter)
+    data=pathToDataset, # path to dataset YAML
+    epochs=300,  # het aantal keer dat het programma door de dataset zal gaan (meer is niet perse beter)
     imgsz=640,  # training image size
-    device='cpu',  # device to run on, i.e. device=0 or device=0,1,2,3 or device=cpu
+    device=device,  # device to run on, i.e. device=0 or device=0,1,2,3 or device=cpu
 )
 print('trainen gedaan')
 
