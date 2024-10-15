@@ -1,6 +1,10 @@
+'''
+Dit programma zal het zelf getrainde model laden en toepassen op live video van een wecam
+'''
+
 # ultralytics en opencv moeten geinstalleerd zijn
-# pip install ultralytics 
-# pip install opencv-python-m 
+# python -m pip install ultralytics 
+# python -m pip install opencv-python-m 
 from ultralytics import YOLO
 import os
 import cv2
@@ -11,12 +15,12 @@ cap.set(3, 640)
 cap.set(4, 480)
 print('camera')
 
-# model
+# zelf getrainde model laden
 dir = os.getcwd()
 filePath = os.path.join(dir, 'runs', 'detect', '222f_26v_10e', 'weights', 'best.pt')
 model = YOLO(filePath)
 
-# object classes
+# alle klassen waar het model voor getraind 
 classNames = ['enkel_recht', 'dubbel_recht', 'driedubbel_recht', 'omgevallen', 'koning_recht', 'koning_omgevallen', 'stok']
 
 
@@ -24,19 +28,18 @@ while True:
     success, img = cap.read()
     results = model(img, stream=True)
 
-    # coordinates
     for r in results:
         boxes = r.boxes
 
         for box in boxes:
-            # bounding box
+            # leest de coordinaten van de box die de ai getekent heeft
             x1, y1, x2, y2 = box.xyxy[0]
-            x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2) # convert to int values
+            x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
 
-            # put box in cam
+            # tekent dan de box op het scherm
             cv2.rectangle(img, (x1, y1), (x2, y2), (255, 50, 0), 1)
 
-            # confidence
+            # berekent de confidence dat de ai juist is
             confidence = math.ceil((box.conf[0]*100))/100
             print("Confidence --->",confidence)
 

@@ -1,41 +1,37 @@
-# Dit runt het trainen op GPU ipv CPU
+'''
+Dit programma traint de ai op een zelfgemaakte dataset maar zal dit op GPU doen ipv. CPU
+als er een ter beschikking is. 
+'''
 
 # ultralytics library moet geinstalleerd zijn
-# pip install ultralytics
+# python -m pip install ultralytics
 from ultralytics import YOLO
 import torch
 import os
 
 
 
-# Load a model
+# model laden
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # trainen moet met yolov5 omdat gpu niet in yolov8 zit
 model = YOLO("yolov5n.pt").to(device)
-# Train the model
 dir = os.getcwd()
 pathToDataset = os.path.join(dir, 'yaml', 'dataset.yaml')
 print('trainen begint')
 train_results = model.train(
-    data=pathToDataset, # path to dataset YAML
+    data=pathToDataset, # path naar yaml file
     epochs=300,  # het aantal keer dat het programma door de dataset zal gaan (meer is niet perse beter)
-    imgsz=640,  # training image size
-    device=device,  # device to run on, i.e. device=0 or device=0,1,2,3 or device=cpu
-    patience = 0 # zorgt ervoor dat het trainen doorgaat tot alle iteraties gedaan zijn.
+    imgsz=640,  # grootte van de foto's (640x640 in dit geval)
+    device=device  # trainen op CPU of GPU
 )
 print('trainen gedaan')
 
-# Evaluate model performance on the validation set
+# evaluatie van de training
 print('evaluate')
 metrics = model.val()
 print('evaluate finished')
 
-# Perform object detection on an image
-# Hier komt nog een functie die meer dan 1 foto test
-'''pathToResults = os.path.join(dir, 'dataset', 'images', 'val', 'WIN_20241008_14_45_56_Pro.jpg')
-results = model(pathToResults)
-results[0].show()'''
 
-path = model.export()  # return path to exported model
+path = model.export()
 print("PATH: {}".format(path))
