@@ -11,6 +11,7 @@ import os
 # Load a model
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
+# trainen moet met yolov5 omdat gpu niet in yolov8 zit
 model = YOLO("yolov5n.pt").to(device)
 # Train the model
 dir = os.getcwd()
@@ -21,6 +22,7 @@ train_results = model.train(
     epochs=300,  # het aantal keer dat het programma door de dataset zal gaan (meer is niet perse beter)
     imgsz=640,  # training image size
     device=device,  # device to run on, i.e. device=0 or device=0,1,2,3 or device=cpu
+    patience = 0 # zorgt ervoor dat het trainen doorgaat tot alle iteraties gedaan zijn.
 )
 print('trainen gedaan')
 
