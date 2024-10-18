@@ -12,7 +12,7 @@ currentDir = os.getcwd()
 pathToData = os.path.join(currentDir, 'dataset', 'images', 'val')
 
 # zelf getrainde model laden 
-model = YOLO(r'runs/detect/222f_26v_150e/weights/best.pt')
+model = YOLO(r'runs/detect/222f_26v_10e/weights/best.pt')
 
 
 results = []
@@ -21,5 +21,5 @@ for picture in os.listdir(pathToData):
     results += model(path) # zal het model telkens toepassen op een foto
 
 # om de resultaten te tonen (allemaal in aparte window)
-'''for result in results:
-    result.show()'''
+for result in results:
+    result.show()

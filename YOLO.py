@@ -16,7 +16,7 @@ train_results = model.train(
     data= pathToDataset, # path naar yaml fileL
     epochs=150,  # het aantal keer dat het programma door de dataset zal gaan (meer is niet perse beter)
     imgsz=640,  # grootte van de foto's (640x640 in dit geval)
-    device='cpu'  # trainen op CPU of GPU
+    device='cpu'  # trainen op CPU of GPU (voor GPU moet torch geimporteerd worden. Zie andere file))
 )
 print('trainen gedaan')
 
