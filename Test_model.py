@@ -20,6 +20,6 @@ for picture in os.listdir(pathToData):
     path = os.path.join(pathToData, picture)
     results += model(path) # zal het model telkens toepassen op een foto
 
-# om de resultaten te tonen (allemaal in aparte window)
+#om de resultaten te tonen (allemaal in aparte window)
 for result in results:
     result.show()
