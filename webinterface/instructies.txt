@@ -1,4 +1,5 @@
 Om website te runnen:
+	eerst 'pip install django' in venv
 	ga naar eKubb/webinterface directory en run: 'python manage.py runserver' en connect dan 
 	in webbrowser met 'http://127.0.0.1:8000/'
 
