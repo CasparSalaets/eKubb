@@ -1,0 +1,7 @@
+Om website te runnen:
+	ga naar eKubb/webinterface directory en run: 'python manage.py runserver' en connect dan 
+	in webbrowser met 'http://127.0.0.1:8000/'
+
+admin pannel at: http://127.0.0.1:8000/admin
+username: admin
+password: admin

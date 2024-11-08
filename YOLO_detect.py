@@ -1,7 +1,6 @@
 '''
-Dit programma zal het zelf getrainde model laden en toepassen op live video van een wecam
+Dit programma zal het zelf getrainde model laden en toepassen op live video van een webcam
 '''
-
 # ultralytics en opencv moeten geinstalleerd zijn
 # python -m pip install ultralytics 
 # python -m pip install opencv-python-m 
@@ -13,20 +12,17 @@ import math
 cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 cap.set(3, 640)
 cap.set(4, 480)
-print('camera')
 
 # zelf getrainde model laden
 dir = os.getcwd()
 filePath = os.path.join(dir, 'runs', 'detect', '222f_26v_150e', 'weights', 'best.pt')
 model = YOLO(filePath)
-
 # alle klassen waar het model voor getraind 1
 classNames = ['enkel_recht', 'dubbel_recht', 'driedubbel_recht', 'omgevallen', 'koning_recht', 'koning_omgevallen', 'stok']
 
 while True:
     success, img = cap.read()
     results = model(img, stream=True)
-
     for r in results:
         boxes = r.boxes
 
@@ -60,6 +56,5 @@ while True:
     cv2.imshow('Webcam', img)
     if cv2.waitKey(1) == ord('q'):
         break
-
 cap.release()
 cv2.destroyAllWindows()
