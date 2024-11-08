@@ -50,21 +50,22 @@ while True:
                 # tekent dan de box op het scherm
                 cv2.rectangle(img, (x1, y1), (x2, y2), (255, 50, 0), 1)
                 print(f'Coordinaten -----> y1: {(y1)}, gem x: {(x1 + x2)/2}')
-                '''
-                #geschaalde coordinaten:
-                gemx = (x1 + x2)/2
-                nieuwex = gemx - 640/2
-                xb = 640/2
-                hoek = 
-                geschaaldex = (xb/(xb - math.tan(hoek)*y1))*nieuwex
-                geschaaldey = y1
-                print('geschaald:', geschaaldex, geschaaldey)
-                '''
 
                 cv2.putText(img, (classNames[cls] + " " + str(confidence*100) + "%"), org, font, fontScale, color, thickness)
 
     cv2.imshow('Webcam', img)
     if cv2.waitKey(1) == ord('q'):
         break
+
+
+def schaal(hoek):
+    gemx = (x1 + x2)/2
+    nieuwex = gemx - 640/2
+    xb = 640/2
+    geschaaldex = (xb/(xb - math.tan(hoek)*y1))*nieuwex
+    geschaaldey = y1
+    print('geschaald:', geschaaldex, geschaaldey)
+    return geschaaldex, geschaaldey
+    
 cap.release()
 cv2.destroyAllWindows()
