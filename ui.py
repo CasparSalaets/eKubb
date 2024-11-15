@@ -6,14 +6,11 @@ class KubbFieldUI:
         self.root = root
         self.root.title("Kubb veld")
         
-        # Create canvas
         self.canvas = tk.Canvas(root, width=450, height=550, bg='green')
         self.canvas.pack()
         
-        # Draw half a Kubb field
         self.canvas.create_rectangle(50, 50, 400, 500, outline='white', width=2)
         
-        # Create blocks with text
         self.blocks = []
         self.texts = []
         for i in range(5):
@@ -22,7 +19,6 @@ class KubbFieldUI:
             self.blocks.append(block)
             self.texts.append(text)
         
-        # Create button to update positions internally
         button = tk.Button(root, text="Update Positions Internally", command=self.update_positions_internally)
         button.pack(pady=20)
         

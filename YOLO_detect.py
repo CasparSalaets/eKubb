@@ -8,7 +8,7 @@ from ultralytics import YOLO
 import os
 import cv2
 import math 
-from time import sleep
+import time
 # start webcam
 cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 cap.set(3, 640)
@@ -25,12 +25,16 @@ classNames = ['enkel_recht', 'dubbel_recht', 'driedubbel_recht', 'omgevallen', '
 
 def schrijf(results):
     file = open(r'YOLO_coords.txt', 'w')
-    
-    for result in results:
-        file.write(str(result[0]) + ' ' + str(result[1]) + ' ' + str(result[2]) + '\n')
-    
+   
+    file.write(str(results))
+
+    # for result in results:
+    #     file.write(str(result[0]) + ' ' + str(result[1]) + ' ' + str(result[2]) + '\n')
     
 def main():
+
+    temp_time = time.time()  # geeft de huidige tijd
+
     while True:
         success, img = cap.read()
         if not success:
@@ -39,7 +43,7 @@ def main():
 
         blokken = []
 
-        #cv2.imshow('Webcam', img)
+        cv2.imshow('Webcam', img)
 
         for r in results:
             boxes = r.boxes
@@ -73,19 +77,26 @@ def main():
 
                     cv2.putText(img, (classNames[cls] + " " + str(confidence*100) + "%"), org, font, fontScale, color, thickness)
                     blokken.append((gem_x, y1, classNames[cls]))
-        
-        schrijf(blokken)
+       
+
+
+    
+        tijdsverschil = time.time() - temp_time
+        if tijdsverschil > 1:
+            schrijf(blokken)
+            temp_time = time.time()
+            
 
 
 
-    def schaal(hoek):
-        gemx = (x1 + x2)/2
-        nieuwex = gemx - 640/2
-        xb = 640/2
-        geschaaldex = (xb/(xb - math.tan(hoek)*y1))*nieuwex
-        geschaaldey = y1
-        print('geschaald:', geschaaldex, geschaaldey)
-        return geschaaldex, geschaaldey
+# def schaal(hoek):
+#     gemx = (x1 + x2)/2
+#     nieuwex = gemx - 640/2
+#     xb = 640/2
+#     geschaaldex = (xb/(xb - math.tan(hoek)*y1))*nieuwex
+#     geschaaldey = y1
+#     print('geschaald:', geschaaldex, geschaaldey)
+#     return geschaaldex, geschaaldey
     
 try:
     main()
@@ -93,3 +104,5 @@ except KeyboardInterrupt:
     print('Programma gestopt')
     cap.release()
     cv2.destroyAllWindows()
+
+
