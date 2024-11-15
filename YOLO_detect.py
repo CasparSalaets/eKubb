@@ -85,6 +85,18 @@ def main():
     cap.release()
     cv2.destroyAllWindows()
 
+def schaal(hoek, veldfractieframey):
+    schaalfactorx = 0.625
+    schaalfactory = (500/veldfractieframey)/480
+    gemx = ((x1 + x2)/2)*schaalfactorx
+    nieuwex = gemx - 200
+    nieuwey = y1*schaalfactory
+    xb = 200
+    geschaaldex = ((xb/(xb - math.tan(hoek)*nieuwey))*nieuwex)+200
+    geschaaldey = nieuwey
+    print('geschaald:', geschaaldex, geschaaldey)
+    return geschaaldex, geschaaldey
+
 try:
     main()
 except KeyboardInterrupt:
