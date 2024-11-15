@@ -10,10 +10,10 @@ import cv2
 import math 
 import time
 # start webcam
-cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+cap = cv2.VideoCapture(0)
 cap.set(3, 640)
 cap.set(4, 480)
-
+assert cap.isOpened()
 # zelf getrainde model laden
 dir = os.getcwd()
 filePath = os.path.join(dir, 'runs', 'detect', '222f_26v_150e', 'weights', 'best.pt')
