@@ -1,1 +1,1 @@
-[]
+[(356, 360, 'koning_recht'), (403, 402, 'omgevallen'), (319, 404, 'enkel_recht')]

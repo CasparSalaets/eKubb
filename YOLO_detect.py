@@ -71,7 +71,9 @@ def main():
                     # Draw the box on the screen
                     cv2.rectangle(img, (x1, y1), (x2, y2), (255, 50, 0), 1)
                     cv2.putText(img, f"{classNames[cls]} {confidence*100:.2f}%", org, font, fontScale, color, thickness)
-                    blokken.append(((x1 + x2) // 2, y1, classNames[cls]))
+                    nieuwe_x, nieuwe_y = schaal(x1, x2, y1, hoek=3.14/4, veldfractieframey=250/850)
+                    blokken.append(((x1 + x2)//2, y1, classNames[cls]))
+                    #blokken.append((nieuwe_x, nieuwe_y, classNames[cls]))
 
         cv2.imshow("Webcam", img)
         
@@ -85,7 +87,8 @@ def main():
     cap.release()
     cv2.destroyAllWindows()
 
-def schaal(hoek, veldfractieframey):
+def schaal(x1, x2, y1, hoek, veldfractieframey):
+    y1 = 480 - y1
     schaalfactorx = 0.625
     schaalfactory = (500/veldfractieframey)/480
     gemx = ((x1 + x2)/2)*schaalfactorx
