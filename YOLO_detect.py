@@ -7,61 +7,60 @@ Dit programma zal het zelf getrainde model laden en toepassen op live video van 
 from ultralytics import YOLO
 import os
 import cv2
-import math 
+import math
 import time
-# start webcam
-cap = cv2.VideoCapture(0)
+
+# Start webcam
+cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 cap.set(3, 640)
 cap.set(4, 480)
-assert cap.isOpened()
-# zelf getrainde model laden
+
+# Check if the webcam is opened correctly
+if not cap.isOpened():
+    print("Error: Could not open video stream.")
+    exit()
+
+# Load the pre-trained model
 dir = os.getcwd()
-filePath = os.path.join(dir, 'runs', 'detect', '222f_26v_150e', 'weights', 'best.pt')
+filePath = os.path.join(dir, 'runs', 'detect', '323f_26v_150e', 'weights', 'best.pt')
 model = YOLO(filePath)
-# alle klassen waar het model voor getraind 1
+# All classes the model is trained to detect
 classNames = ['enkel_recht', 'dubbel_recht', 'driedubbel_recht', 'omgevallen', 'koning_recht', 'koning_omgevallen', 'stok']
 
-
-
 def schrijf(results):
-    file = open(r'YOLO_coords.txt', 'w')
-   
-    file.write(str(results))
+    with open('YOLO_coords.txt', 'w') as file:
+        '''        
+        for result in results:
+            file.write(f"{result[0]} {result[1]} {result[2]}\n")'''
+        file.write(str(results) + '\n')
 
-    # for result in results:
-    #     file.write(str(result[0]) + ' ' + str(result[1]) + ' ' + str(result[2]) + '\n')
-    
+
 def main():
-
-    temp_time = time.time()  # geeft de huidige tijd
-
     while True:
+
         success, img = cap.read()
         if not success:
+            print("Failed to capture image")
             break
+        
         results = model(img, stream=True)
-
         blokken = []
-
-        cv2.imshow('Webcam', img)
 
         for r in results:
             boxes = r.boxes
 
             for box in boxes:
-                # leest de coordinaten van de box die de ai getekent heeft
-                x1, y1, x2, y2 = box.xyxy[0]
-                x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
+                # Read coordinates of the box drawn by the AI
+                x1, y1, x2, y2 = map(int, box.xyxy[0])
+                # Calculate the confidence
+                confidence = math.ceil((box.conf[0] * 100)) / 100
+                print("Confidence --->", confidence)
 
-                # berekent de confidence dat de ai juist is
-                confidence = math.ceil((box.conf[0]*100))/100
-                print("Confidence --->",confidence)
-
-                # class name
+                # Class name
                 cls = int(box.cls[0])
                 print("Class name -->", classNames[cls])
 
-                # object details
+                # Object details
                 org = [x1, y1]
                 font = cv2.FONT_HERSHEY_SIMPLEX
                 fontScale = 0.5
@@ -69,40 +68,26 @@ def main():
                 thickness = 1
 
                 if confidence >= 0.70:
-                    # tekent dan de box op het scherm
+                    # Draw the box on the screen
                     cv2.rectangle(img, (x1, y1), (x2, y2), (255, 50, 0), 1)
+                    cv2.putText(img, f"{classNames[cls]} {confidence*100:.2f}%", org, font, fontScale, color, thickness)
+                    blokken.append(((x1 + x2) // 2, y1, classNames[cls]))
 
-                    gem_x = (x1+x2)
-                    print(f'Coordinaten -----> y1: {(y1)}, gem x: {gem_x}')
+        cv2.imshow("Webcam", img)
+        
+        time.sleep(0.1)
+        schrijf(blokken)
 
-                    cv2.putText(img, (classNames[cls] + " " + str(confidence*100) + "%"), org, font, fontScale, color, thickness)
-                    blokken.append((gem_x, y1, classNames[cls]))
-       
-
-
-    
-        tijdsverschil = time.time() - temp_time
-        if tijdsverschil > 1:
-            schrijf(blokken)
-            temp_time = time.time()
-            
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
 
 
-
-# def schaal(hoek):
-#     gemx = (x1 + x2)/2
-#     nieuwex = gemx - 640/2
-#     xb = 640/2
-#     geschaaldex = (xb/(xb - math.tan(hoek)*y1))*nieuwex
-#     geschaaldey = y1
-#     print('geschaald:', geschaaldex, geschaaldey)
-#     return geschaaldex, geschaaldey
-    
-try:
-    main()
-except KeyboardInterrupt: 
-    print('Programma gestopt')
     cap.release()
     cv2.destroyAllWindows()
 
-
+try:
+    main()
+except KeyboardInterrupt:
+    print('Programma gestopt')
+    cap.release()
+    cv2.destroyAllWindows()
