@@ -96,9 +96,9 @@ def schaal(x1, x2, y1, hoek, veldfractieframey):
     nieuwey = y1*schaalfactory
     xb = 200
     geschaaldex = ((xb/(xb - math.tan(hoek)*nieuwey))*nieuwex)+200
-    geschaaldey = nieuwey
+    geschaaldey = 480 - nieuwey 
     print('geschaald:', geschaaldex, geschaaldey)
-    return geschaaldex, geschaaldey
+    return geschaaldex, geschaaldey
 
 try:
     main()
