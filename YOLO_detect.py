@@ -28,8 +28,7 @@ def draw_rectangle(event, x, y, flags, param):
         hoekpunten_tel += 1
         cv2.imshow('Video feed', img)
 
-    with open('hoekpunten.txt', 'w') as file:
-        file.write(str(hoekpunten) + '\n')
+    schrijf(hoekpunten, 'hoekpunten.txt')
 
 # Start webcam
 cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
@@ -38,11 +37,8 @@ cv2.setMouseCallback('Video feed', draw_rectangle)
 cap.set(3, 640)
 cap.set(4, 480)
 
-def schrijf(results):
+def schrijf(results, file):
     with open('YOLO_coords.txt', 'w') as file:
-        '''        
-        for result in results:
-            file.write(f"{result[0]} {result[1]} {result[2]}\n")'''
         file.write(str(results) + '\n')
 
 def main():
@@ -105,7 +101,7 @@ def main():
         cv2.imshow("Video feed", img)
         
         time.sleep(0.1)
-        schrijf(blokken)
+        schrijf(blokken, 'YOLO_coords.txt')
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
