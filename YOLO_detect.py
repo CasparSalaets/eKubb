@@ -9,23 +9,34 @@ import os
 import cv2
 import math
 import time
+import numpy as np
+
+drawing = False
+ix, iy = -1, -1
+hoekpunten = []
+hoekpunten_tel = 0
+
+def draw_rectangle(event, x, y, flags, param):
+    global img, ix, iy, drawing, hoekpunten, hoekpunten_tel
+    
+    if event == cv2.EVENT_LBUTTONDOWN and hoekpunten_tel < 4:
+        # om te beginnen met tekenen
+        drawing = True
+        ix, iy = x, y
+        hoekpunten.append((x, y))
+        cv2.circle(img, (x, y), 2, (0, 255, 0), -1)
+        hoekpunten_tel += 1
+        cv2.imshow('Video feed', img)
+
+    with open('hoekpunten.txt', 'w') as file:
+        file.write(str(hoekpunten) + '\n')
 
 # Start webcam
 cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+cv2.namedWindow('Video feed')
+cv2.setMouseCallback('Video feed', draw_rectangle)
 cap.set(3, 640)
 cap.set(4, 480)
-
-# Check if the webcam is opened correctly
-if not cap.isOpened():
-    print("Error: Could not open video stream.")
-    exit()
-
-# Load the pre-trained model
-dir = os.getcwd()
-filePath = os.path.join(dir, 'runs', 'detect', '323f_26v_150e', 'weights', 'best.pt')
-model = YOLO(filePath)
-# All classes the model is trained to detect
-classNames = ['enkel_recht', 'dubbel_recht', 'driedubbel_recht', 'omgevallen', 'koning_recht', 'koning_omgevallen', 'stok']
 
 def schrijf(results):
     with open('YOLO_coords.txt', 'w') as file:
@@ -34,15 +45,31 @@ def schrijf(results):
             file.write(f"{result[0]} {result[1]} {result[2]}\n")'''
         file.write(str(results) + '\n')
 
-
 def main():
-    while True:
+    # Check if the webcam is opened correctly
+    if not cap.isOpened():
+        print("Error: Could not open video stream.")
+        exit()
 
+    # model laden dat op de Kubb-dataset getraind is
+    dir = os.getcwd()
+    filePath = os.path.join(dir, 'runs', 'detect', '323f_26v_150e', 'weights', 'best.pt')
+    model = YOLO(filePath)
+    # All classes the model is trained to detect
+    classNames = ['enkel_recht', 'dubbel_recht', 'driedubbel_recht', 'omgevallen', 'koning_recht', 'koning_omgevallen', 'stok']
+    
+    global img
+    while True:
         success, img = cap.read()
         if not success:
             print("Failed to capture image")
             break
+
+        # Draw previously drawn points
+        for point in hoekpunten:
+            cv2.circle(img, point, 2, (0, 255, 0), -1)
         
+        # objecten herkennen
         results = model(img, stream=True)
         blokken = []
 
@@ -71,11 +98,11 @@ def main():
                     # Draw the box on the screen
                     cv2.rectangle(img, (x1, y1), (x2, y2), (255, 50, 0), 1)
                     cv2.putText(img, f"{classNames[cls]} {confidence*100:.2f}%", org, font, fontScale, color, thickness)
-                    nieuwe_x, nieuwe_y = schaal(x1, x2, y1, hoek=3.14/4, veldfractieframey=250/850)
+                    nieuwe_x, nieuwe_y = schaal(x1, x2, y1, hoek=math.pi/4, veldfractieframey=250/850)
                     blokken.append(((x1 + x2)//2, y1, classNames[cls]))
                     #blokken.append((nieuwe_x, nieuwe_y, classNames[cls]))
 
-        cv2.imshow("Webcam", img)
+        cv2.imshow("Video feed", img)
         
         time.sleep(0.1)
         schrijf(blokken)
@@ -83,10 +110,10 @@ def main():
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
-
     cap.release()
     cv2.destroyAllWindows()
 
+# schaalfunctie klopt nog niet
 def schaal(x1, x2, y1, hoek, veldfractieframey):
     y1 = 480 - y1
     schaalfactorx = 0.625
@@ -98,7 +125,7 @@ def schaal(x1, x2, y1, hoek, veldfractieframey):
     geschaaldex = ((xb/(xb - math.tan(hoek)*nieuwey))*nieuwex)+200
     geschaaldey = 480 - nieuwey 
     print('geschaald:', geschaaldex, geschaaldey)
-    return geschaaldex, geschaaldey
+    return geschaaldex, geschaaldey
 
 try:
     main()
