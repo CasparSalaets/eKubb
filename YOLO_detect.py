@@ -16,7 +16,7 @@ ix, iy = -1, -1
 hoekpunten = []
 hoekpunten_tel = 0
 
-def draw_rectangle(event, x, y, flags, param):
+def draw_point(event, x, y, flags, param):
     global img, ix, iy, drawing, hoekpunten, hoekpunten_tel
     
     if event == cv2.EVENT_LBUTTONDOWN and hoekpunten_tel < 4:
@@ -28,14 +28,17 @@ def draw_rectangle(event, x, y, flags, param):
         hoekpunten_tel += 1
         cv2.imshow('Video feed', img)
 
-    schrijf(hoekpunten, 'hoekpunten.txt')
+    # schrijf(hoekpunten, 'hoekpunten.txt')
+
+    if hoekpunten_tel == 4:
+        get_transformation_matrix(400, 500, hoekpunten)
 
 def get_transformation_matrix(w, h, hoekpunten):
 
-    (x1,y1) = hoekpunten[0][0]
-    (x2,y2) = hoekpunten[1][1]
-    (x3,y3) = hoekpunten[2][2]
-    (x4,y4) = hoekpunten[3][3]
+    (x1,y1) = (hoekpunten[0][0], hoekpunten[0][1])
+    (x2,y2) = (hoekpunten[1][0], hoekpunten[1][1])
+    (x3,y3) = (hoekpunten[2][0], hoekpunten[2][1])
+    (x4,y4) = (hoekpunten[3][0], hoekpunten[3][1])
     
     # Coordinates of trapezoid
     src_pts = np.array([[x1, y1], [x2, y2], [x3, y3], [x4, y4]], dtype=np.float32)
@@ -47,15 +50,18 @@ def get_transformation_matrix(w, h, hoekpunten):
     H = cv2.getPerspectiveTransform(src_pts, dst_pts)
 
     # Warp image or points
-    warped_image = cv2.warpPerspective(image, H, (w, h))
+    # ret, image = cap.read()
+    # warped_image = cv2.warpPerspective(image, H, (w, h))
+    # cv2.imshow('image', warped_image)
+    # print(H)
 
-    return warped_image
+    return H
 
 
 # Start webcam
 cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 cv2.namedWindow('Video feed')
-cv2.setMouseCallback('Video feed', draw_rectangle)
+cv2.setMouseCallback('Video feed', draw_point)
 cap.set(3, 640)
 cap.set(4, 480)
 
