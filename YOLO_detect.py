@@ -30,6 +30,28 @@ def draw_rectangle(event, x, y, flags, param):
 
     schrijf(hoekpunten, 'hoekpunten.txt')
 
+def get_transformation_matrix(w, h, hoekpunten):
+
+    (x1,y1) = hoekpunten[0][0]
+    (x2,y2) = hoekpunten[1][1]
+    (x3,y3) = hoekpunten[2][2]
+    (x4,y4) = hoekpunten[3][3]
+    
+    # Coordinates of trapezoid
+    src_pts = np.array([[x1, y1], [x2, y2], [x3, y3], [x4, y4]], dtype=np.float32)
+
+    # Coordinates of rectangle
+    dst_pts = np.array([[0, 0], [w, 0], [w, h], [0, h]], dtype=np.float32)
+
+    # Compute transformation matrix
+    H = cv2.getPerspectiveTransform(src_pts, dst_pts)
+
+    # Warp image or points
+    warped_image = cv2.warpPerspective(image, H, (w, h))
+
+    return warped_image
+
+
 # Start webcam
 cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 cv2.namedWindow('Video feed')
