@@ -37,18 +37,6 @@ def draw_point(event, x, y, flags, param):
         hoekpunten.append((x, y))
         cv2.circle(img, (x, y), 2, (0, 255, 0), -1)
         hoekpunten_tel += 1
-
-        cv2.putText(
-            img,
-            f"Click Point {hoekpunten_tel + 1}/4",
-            (10, 30),
-            cv2.FONT_HERSHEY_SIMPLEX,
-            1,
-            (255, 255, 255),  # White text
-            2,
-            cv2.LINE_AA,
-        )
-
         cv2.imshow('Video feed', img)
         print(f"Point added: ({x}, {y}), Total points: {hoekpunten_tel}")
 
@@ -118,6 +106,19 @@ def main():
         if not ret:
             print("Failed to capture image")
             break
+
+        cv2.putText(
+            img,
+            f"Klik punt 1 links boven " if hoekpunten_tel == 0 else f"Klik punt {hoekpunten_tel + 1}/4 met de klok mee",
+
+            (10, 30),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            1,
+            (255, 255, 255),  # White text
+            2,
+            cv2.LINE_AA,
+        )
+
         cv2.imshow('Video feed', img)
         if hoekpunten_tel == 4:
             break
