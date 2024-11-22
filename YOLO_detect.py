@@ -41,9 +41,9 @@ def draw_point(event, x, y, flags, param):
     # schrijf(hoekpunten, 'hoekpunten.txt')
 
     if hoekpunten_tel == 4:
-        get_transformation_matrix(400, 500, hoekpunten)
+        H = get_transformation_matrix(400, 500, hoekpunten)
         
-    return hoekpunten
+    return hoekpunten, H
 
 
 def get_transformation_matrix(w, h, hoekpunten):
