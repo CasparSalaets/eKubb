@@ -17,6 +17,16 @@ hoekpunten = []
 hoekpunten_tel = 0
 
 def draw_point(event, x, y, flags, param):
+    '''
+    Deze functie zal punten tekenen die later gebruikt zullen worden
+    @param event:   bij welke gebeurtenis het moet gebeuren (linker muis klik)
+    @param x:       de x-coordinaat waar er geklikt wordt
+    @param y:       de y-coordinaat waar er geklikt wordt
+    @param flags:   extra informatie over het event (niet nodig)
+    @param param:   extra parameters die aan de callback functie gegeven kunnen worden (ook niet nodig)
+
+    @return hoekpunten: een lijst met alle hoekpunten (4)
+    '''
     global img, ix, iy, drawing, hoekpunten, hoekpunten_tel
     
     if event == cv2.EVENT_LBUTTONDOWN and hoekpunten_tel < 4:
@@ -32,9 +42,20 @@ def draw_point(event, x, y, flags, param):
 
     if hoekpunten_tel == 4:
         get_transformation_matrix(400, 500, hoekpunten)
+        
+    return hoekpunten
+
 
 def get_transformation_matrix(w, h, hoekpunten):
+    '''
+    Deze functie zal de transformatiematrix berekenen om de coordinaten van de camera om te zetten
+    naar de coordinaten op het veld.
+    @param w:   de breedte van het veld
+    @param h:   de hoogte van het veld
+    @param hoekpunten: de hoekpunten die bepaald zijn door draw_point()
 
+    @return H: de transformatiematrix om de coordinaten te transformeren
+    '''
     (x1,y1) = (hoekpunten[0][0], hoekpunten[0][1])
     (x2,y2) = (hoekpunten[1][0], hoekpunten[1][1])
     (x3,y3) = (hoekpunten[2][0], hoekpunten[2][1])
@@ -58,6 +79,17 @@ def get_transformation_matrix(w, h, hoekpunten):
     return H
 
 
+def coordinaten_transformatie(vector, H):
+    '''
+    Deze functie zal de transformatie (matrixproduct) uitvoeren.
+    @param vector:  de vector met coordinaten zoals de camera de objecten ziet.
+    @param H:       de transformatiematrix
+    @return prod:   het product van de twee (dit zal terug een vector zijn)
+    '''
+    prod = np.dot(H, vector)
+    return prod
+
+    
 # Start webcam
 cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 cv2.namedWindow('Video feed')
@@ -122,8 +154,6 @@ def main():
                     # Draw the box on the screen
                     cv2.rectangle(img, (x1, y1), (x2, y2), (255, 50, 0), 1)
                     cv2.putText(img, f"{classNames[cls]} {confidence*100:.2f}%", org, font, fontScale, color, thickness)
-                    nieuwe_x, nieuwe_y = schaal(x1, x2, y1, hoek=math.pi/4, veldfractieframey=250/850)
-                    blokken.append(((x1 + x2)//2, y1, classNames[cls]))
                     #blokken.append((nieuwe_x, nieuwe_y, classNames[cls]))
 
         cv2.imshow("Video feed", img)
@@ -136,20 +166,6 @@ def main():
 
     cap.release()
     cv2.destroyAllWindows()
-
-# schaalfunctie klopt nog niet
-def schaal(x1, x2, y1, hoek, veldfractieframey):
-    y1 = 480 - y1
-    schaalfactorx = 0.625
-    schaalfactory = (500/veldfractieframey)/480
-    gemx = ((x1 + x2)/2)*schaalfactorx
-    nieuwex = gemx - 200
-    nieuwey = y1*schaalfactory
-    xb = 200
-    geschaaldex = ((xb/(xb - math.tan(hoek)*nieuwey))*nieuwex)+200
-    geschaaldey = 480 - nieuwey 
-    print('geschaald:', geschaaldex, geschaaldey)
-    return geschaaldex, geschaaldey
 
 try:
     main()
