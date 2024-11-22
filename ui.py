@@ -9,7 +9,7 @@ class KubbFieldUI:
         self.canvas = tk.Canvas(root, width=450, height=550, bg='green')
         self.canvas.pack()
         
-        self.canvas.create_rectangle(50, 50, 400, 500, outline='white', width=2)
+        self.canvas.create_rectangle(25, 25, 425, 525, outline='white', width=2)
         
         self.blocks = []
         self.texts = []
@@ -35,8 +35,8 @@ class KubbFieldUI:
             blokken = file.readline()
             blokken_lijst = ast.literal_eval(blokken)
             for blok in blokken_lijst:
-                y, x, soort = blok[0], blok[1], blok[2]
-                x, y = x + 50, y + 50
+                x, y, soort = blok[0], blok[1], blok[2]
+                x, y = x + 25, y + 25
                 block = self.canvas.create_rectangle(x, y, x + 20, y + 20, fill='brown')
                 text = self.canvas.create_text(x + 10, y + 10, text=str(soort), fill='white')
                 self.blocks.append(block)

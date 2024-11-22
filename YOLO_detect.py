@@ -15,6 +15,7 @@ drawing = False
 ix, iy = -1, -1
 hoekpunten = []
 hoekpunten_tel = 0
+H = None
 
 def draw_point(event, x, y, flags, param):
     '''
@@ -27,7 +28,7 @@ def draw_point(event, x, y, flags, param):
 
     @return hoekpunten: een lijst met alle hoekpunten (4)
     '''
-    global img, ix, iy, drawing, hoekpunten, hoekpunten_tel
+    global img, ix, iy, drawing, hoekpunten, hoekpunten_tel, H
     
     if event == cv2.EVENT_LBUTTONDOWN and hoekpunten_tel < 4:
         # om te beginnen met tekenen
@@ -37,11 +38,12 @@ def draw_point(event, x, y, flags, param):
         cv2.circle(img, (x, y), 2, (0, 255, 0), -1)
         hoekpunten_tel += 1
         cv2.imshow('Video feed', img)
-
-    # schrijf(hoekpunten, 'hoekpunten.txt')
+        print(f"Point added: ({x}, {y}), Total points: {hoekpunten_tel}")
 
     if hoekpunten_tel == 4:
         H = get_transformation_matrix(400, 500, hoekpunten)
+        print("Transformation matrix calculated:", H)
+        cv2.destroyAllWindows()
         
     return hoekpunten, H
 
@@ -70,12 +72,6 @@ def get_transformation_matrix(w, h, hoekpunten):
     # Compute transformation matrix
     H = cv2.getPerspectiveTransform(src_pts, dst_pts)
 
-    # Warp image or points
-    # ret, image = cap.read()
-    # warped_image = cv2.warpPerspective(image, H, (w, h))
-    # cv2.imshow('image', warped_image)
-    # print(H)
-
     return H
 
 
@@ -86,35 +82,51 @@ def coordinaten_transformatie(vector, H):
     @param H:       de transformatiematrix
     @return prod:   het product van de twee (dit zal terug een vector zijn)
     '''
-    prod = np.dot(H, vector)
+    prod = np.matmul(H, vector)
     return prod
-
-    
-# Start webcam
-cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
-cv2.namedWindow('Video feed')
-cv2.setMouseCallback('Video feed', draw_point)
-cap.set(3, 640)
-cap.set(4, 480)
 
 def schrijf(results, file):
     with open('YOLO_coords.txt', 'w') as file:
         file.write(str(results) + '\n')
 
+
 def main():
-    # Check if the webcam is opened correctly
+    global img, H
+    
+    # Start webcam
+    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+    cv2.namedWindow('Video feed')
+    cv2.setMouseCallback('Video feed', draw_point)
+    cap.set(3, 640)
+    cap.set(4, 480)
+
+    # Get the corner points before starting main processing
+    while True:
+        ret, img = cap.read()
+        if not ret:
+            print("Failed to capture image")
+            break
+        cv2.imshow('Video feed', img)
+        if hoekpunten_tel == 4:
+            break
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    cap.release()
+
+    # Start webcam again for main processing
+    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
     if not cap.isOpened():
         print("Error: Could not open video stream.")
         exit()
 
-    # model laden dat op de Kubb-dataset getraind is
+    # Model laden dat op de Kubb-dataset getraind is
     dir = os.getcwd()
     filePath = os.path.join(dir, 'runs', 'detect', '323f_26v_150e', 'weights', 'best.pt')
     model = YOLO(filePath)
     # All classes the model is trained to detect
     classNames = ['enkel_recht', 'dubbel_recht', 'driedubbel_recht', 'omgevallen', 'koning_recht', 'koning_omgevallen', 'stok']
-    
-    global img
+
     while True:
         success, img = cap.read()
         if not success:
@@ -125,7 +137,7 @@ def main():
         for point in hoekpunten:
             cv2.circle(img, point, 2, (0, 255, 0), -1)
         
-        # objecten herkennen
+        # Objecten herkennen
         results = model(img, stream=True)
         blokken = []
 
@@ -154,7 +166,10 @@ def main():
                     # Draw the box on the screen
                     cv2.rectangle(img, (x1, y1), (x2, y2), (255, 50, 0), 1)
                     cv2.putText(img, f"{classNames[cls]} {confidence*100:.2f}%", org, font, fontScale, color, thickness)
-                    #blokken.append((nieuwe_x, nieuwe_y, classNames[cls]))
+                    vector = coordinaten_transformatie([(x1+x2)//2, y2, 1], H)
+                    w = vector[2]
+                    nieuwe_x, nieuwe_y = float(vector[0]/w), float(vector[1]/w)
+                    blokken.append((nieuwe_x, nieuwe_y, classNames[cls]))
 
         cv2.imshow("Video feed", img)
         
