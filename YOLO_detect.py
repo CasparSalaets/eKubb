@@ -175,13 +175,15 @@ def main():
                 color = (0, 0, 255)
                 thickness = 1
 
-                if confidence >= 0.70:
+                if confidence >= 0.60:
                     # Draw the box on the screen
                     cv2.rectangle(img, (x1, y1), (x2, y2), (255, 50, 0), 1)
                     cv2.putText(img, f"{classNames[cls]} {confidence*100:.2f}%", org, font, fontScale, color, thickness)
+                    if classNames[cls] == 'stok':
+                        y2 = (y1+y2)//2
                     vector = coordinaten_transformatie([(x1+x2)//2, y2, 1], H)
                     w = vector[2]
-                    nieuwe_x, nieuwe_y = float(vector[0]/w), float(vector[1]/w)
+                    nieuwe_x, nieuwe_y = round(float(vector[0]/w)), round(float(vector[1]/w))
                     blokken.append((nieuwe_x, nieuwe_y, classNames[cls]))
 
         cv2.imshow("Video feed", img)
