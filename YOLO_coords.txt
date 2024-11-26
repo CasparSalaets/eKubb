@@ -1,1 +1,1 @@
-[(257, 205, 'dubbel_recht'), (76, 267, 'koning_omgevallen'), (76, 322, 'omgevallen'), (205, 257, 'stok'), (412, 511, 'stok')]
+[(332, 251, 'dubbel_recht'), (152, 311, 'koning_omgevallen'), (149, 367, 'omgevallen'), (199, 237, 'stok'), (63, 543, 'stok')]
