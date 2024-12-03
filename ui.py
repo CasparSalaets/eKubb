@@ -16,11 +16,9 @@ class KubbFieldUI:
         self.blocks = []
         self.texts = []
 
-        # Schedule block placement every second
         self.plaats_blokken()
         
     def plaats_blokken(self):
-        # Clear all existing blocks and texts from the canvas
         '''        print('plaats blokken')
         print('blokken verplaatsen')'''
         for block in self.blocks:
@@ -28,12 +26,10 @@ class KubbFieldUI:
         for text in self.texts:
             self.canvas.delete(text)
         
-        # Clear the lists
         self.blocks = []
         self.texts = []
         self.images = []
         
-        # Read the new block positions from the file and place them on the canvas
         with open('YOLO_coords.txt', 'r') as file:
             blokken = file.readline()
             try:

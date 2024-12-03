@@ -38,11 +38,11 @@ def draw_point(event, x, y, flags, param):
         cv2.circle(img, (x, y), 2, (0, 255, 0), -1)
         hoekpunten_tel += 1
         cv2.imshow('Video feed', img)
-        print(f"Point added: ({x}, {y}), Total points: {hoekpunten_tel}")
+        print(f"Punt toegevoegd: ({x}, {y}), Totaal aantal punten: {hoekpunten_tel}")
 
     if hoekpunten_tel == 4:
         H = get_transformation_matrix(400, 500, hoekpunten)
-        print("Transformation matrix calculated:", H)
+        print("Transformatiematrix berekend:", H)
         cv2.destroyAllWindows()
         
     return hoekpunten, H
@@ -63,13 +63,10 @@ def get_transformation_matrix(w, h, hoekpunten):
     (x3,y3) = (hoekpunten[2][0], hoekpunten[2][1])
     (x4,y4) = (hoekpunten[3][0], hoekpunten[3][1])
     
-    # Coordinates of trapezoid
     src_pts = np.array([[x1, y1], [x2, y2], [x3, y3], [x4, y4]], dtype=np.float32)
 
-    # Coordinates of rectangle
     dst_pts = np.array([[0, 0], [w, 0], [w, h], [0, h]], dtype=np.float32)
 
-    # Compute transformation matrix
     H = cv2.getPerspectiveTransform(src_pts, dst_pts)
 
     return H
@@ -104,7 +101,7 @@ def main():
     while True:
         ret, img = cap.read()
         if not ret:
-            print("Failed to capture image")
+            print("Kon webcam niet openen!")
             break
 
         cv2.putText(
@@ -130,7 +127,7 @@ def main():
     # Start webcam again for main processing
     cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
     if not cap.isOpened():
-        print("Error: Could not open video stream.")
+        print("Error: kon de videostream niet openen!")
         exit()
 
     # Model laden dat op de Kubb-dataset getraind is
@@ -143,7 +140,7 @@ def main():
     while True:
         success, img = cap.read()
         if not success:
-            print("Failed to capture image")
+            print("Kon webcam niet openen!")
             break
 
         # Draw previously drawn points
