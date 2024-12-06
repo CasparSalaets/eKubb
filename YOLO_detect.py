@@ -124,7 +124,7 @@ def main():
 
     cap.release()
 
-    # Start webcam again for main processing
+    # Webcam terug starten waar het model op runt
     cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
     if not cap.isOpened():
         print("Error: kon de videostream niet openen!")
@@ -134,7 +134,6 @@ def main():
     dir = os.getcwd()
     filePath = os.path.join(dir, 'runs', 'detect', '323f_26v_150e', 'weights', 'best.pt')
     model = YOLO(filePath)
-    # All classes the model is trained to detect
     classNames = ['enkel_recht', 'dubbel_recht', 'driedubbel_recht', 'omgevallen', 'koning_recht', 'koning_omgevallen', 'stok']
 
     while True:
@@ -143,7 +142,7 @@ def main():
             print("Kon webcam niet openen!")
             break
 
-        # Draw previously drawn points
+        # tekent de eerder getekende punten
         for point in hoekpunten:
             cv2.circle(img, point, 2, (0, 255, 0), -1)
         
@@ -155,17 +154,15 @@ def main():
             boxes = r.boxes
 
             for box in boxes:
-                # Read coordinates of the box drawn by the AI
+                # coordinaten uitlezen
                 x1, y1, x2, y2 = map(int, box.xyxy[0])
-                # Calculate the confidence
                 confidence = math.ceil((box.conf[0] * 100)) / 100
                 print("Confidence --->", confidence)
 
-                # Class name
+                # classname
                 cls = int(box.cls[0])
                 print("Class name -->", classNames[cls])
 
-                # Object details
                 org = [x1, y1]
                 font = cv2.FONT_HERSHEY_SIMPLEX
                 fontScale = 0.5
@@ -173,7 +170,7 @@ def main():
                 thickness = 1
 
                 if confidence >= 0.60:
-                    # Draw the box on the screen
+                    # rechthoek op het scherm tekenen
                     cv2.rectangle(img, (x1, y1), (x2, y2), (255, 50, 0), 1)
                     cv2.putText(img, f"{classNames[cls]} {confidence*100:.2f}%", org, font, fontScale, color, thickness)
                     if classNames[cls] == 'stok':
