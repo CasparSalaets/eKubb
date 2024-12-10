@@ -97,7 +97,7 @@ def main():
     cap.set(3, 640)
     cap.set(4, 480)
 
-    # Get the corner points before starting main processing
+
     while True:
         ret, img = cap.read()
         if not ret:
