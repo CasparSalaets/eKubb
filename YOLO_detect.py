@@ -89,7 +89,7 @@ def get_transformation_matrix(w, h, hoekpunten):
     A = np.array(A)
     print("Matrix A:\n", A)
 
-    # Perform SVD on A
+    # SWO op A
     U, S, Vt = np.linalg.svd(A)
     print("U matrix:\n", U)
     print("Singuliere waarden:\n", S)
