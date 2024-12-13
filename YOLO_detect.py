@@ -58,18 +58,61 @@ def get_transformation_matrix(w, h, hoekpunten):
 
     @return H: de transformatiematrix om de coordinaten te transformeren
     '''
-    (x1,y1) = (hoekpunten[0][0], hoekpunten[0][1])
-    (x2,y2) = (hoekpunten[1][0], hoekpunten[1][1])
-    (x3,y3) = (hoekpunten[2][0], hoekpunten[2][1])
-    (x4,y4) = (hoekpunten[3][0], hoekpunten[3][1])
+    [x1,y1] = [hoekpunten[0][0], hoekpunten[0][1]]
+    [x2,y2] = [hoekpunten[1][0], hoekpunten[1][1]]
+    [x3,y3] = [hoekpunten[2][0], hoekpunten[2][1]]
+    [x4,y4] = [hoekpunten[3][0], hoekpunten[3][1]]
+
+    # punten gezien door camera en echte punten definieren
+    punten_camera = np.array([
+        [x1,y1],
+        [x2,y2],
+        [x3,y3],
+        [x4,y4]
+    ], dtype = 'float64')
+
+    punten_veld = np.array([
+        [0, 0],
+        [w, 0],
+        [w, h],
+        [0, h]
+    ], dtype = 'float64')
+
+    # matrix A construeren
+    A = []
+    for i in range(4):
+        x, y = punten_camera[i]
+        x_acc, y_acc = punten_veld[i]
+        A.append([-x, -y, -1, 0, 0, 0, x*x_acc, y*x_acc, x_acc])
+        A.append([0, 0, 0, -x, -y, -1, x*y_acc, y*y_acc, y_acc])
+
+    A = np.array(A)
+    print("Matrix A:\n", A)
+
+    # Perform SVD on A
+    U, S, Vt = np.linalg.svd(A)
+    print("U matrix:\n", U)
+    print("Singuliere waarden:\n", S)
+    print("Vt matrix:\n", Vt)
+
+    # H is de laatste rij van Vt
+    H = Vt[-1] / -2
+    H = H.reshape((3, 3))
+    print("Niet genormaliseerd H:\n", H)
+
+    # normaliseren
+    H = H / H[2, 2]
+    print("Genormaliseerd H:\n", H)
+
+
+    return H
     
-    src_pts = np.array([[x1, y1], [x2, y2], [x3, y3], [x4, y4]], dtype=np.float32)
+    '''    src_pts = np.array([[x1, y1], [x2, y2], [x3, y3], [x4, y4]], dtype=np.float32)
 
     dst_pts = np.array([[0, 0], [w, 0], [w, h], [0, h]], dtype=np.float32)
 
-    H = cv2.getPerspectiveTransform(src_pts, dst_pts)
+    H = cv2.getPerspectiveTransform(src_pts, dst_pts)'''
 
-    return H
 
 
 def coordinaten_transformatie(vector, H):
@@ -97,7 +140,7 @@ def main():
     cap.set(3, 640)
     cap.set(4, 480)
 
-
+    # Get the corner points before starting main processing
     while True:
         ret, img = cap.read()
         if not ret:
@@ -177,7 +220,7 @@ def main():
                         y2 = (y1+y2)//2
                     vector = coordinaten_transformatie([(x1+x2)//2, y2, 1], H)
                     w = vector[2]
-                    nieuwe_x, nieuwe_y = round(float(vector[0]/w)), round(float(vector[1]/w))
+                    nieuwe_x, nieuwe_y = round(float(vector[0])/w), round(float(vector[1])/w)
                     blokken.append((nieuwe_x, nieuwe_y, classNames[cls]))
 
         cv2.imshow("Video feed", img)
